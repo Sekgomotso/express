@@ -1,0 +1,30 @@
+{
+  "name": "prospective_umuzi_students",
+  "version": "1.0.0",
+  "description": "",
+  "main": "students.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sekgomotso/prospective_umuzi_students.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sekgomotso/prospective_umuzi_students/issues"
+  },
+  "homepage": "https://github.com/Sekgomotso/prospective_umuzi_students#readme",
+  "devDependencies": {
+    "jasmine": "^3.5.0",
+    "jsdom": "^16.0.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "pg": "^7.18.1",
+    "pug": "^2.0.4"
+  }
+}

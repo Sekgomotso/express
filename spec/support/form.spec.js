@@ -1,8 +1,8 @@
-const fixture = require('./fixture');
-const axios = require('axios');
-let visits;
-
 describe("visitor form testing", () => {
+    const fixture = require('./fixture');
+    const axios = require('axios');
+    let visits;
+
     beforeEach(()=>{
         visits = require('../form')
     });

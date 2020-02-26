@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
+
 const path = require('path');
 const bodyParser = require('body-parser');
 
+// add visitor database
 const Pool = require("pg").Pool;
-
-require('dotenv').config();
 
 const pool = new Pool({
   user: "user",
@@ -15,6 +15,8 @@ const pool = new Pool({
   port: 5432
 });
 
+// create app
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // view engine
@@ -28,16 +30,21 @@ app.get("/", (req, res) => {
 
 // submit button route
 app.post('/new_visit', (req, res) => {
-  addNewVisitor(req.body.name, req.body.age, req.body.date, req.body.time, req.body.assistant, req.body.comments);
+  addNewVisitor(req.body.name, 
+    req.body.assistant, 
+    req.body.age, 
+    req.body.date, 
+    req.body.time, 
+    req.body.comments);
 res.sendFile(__dirname + '/form.html')
 });
 
 // save visitor into database
-const addNewVisitor = async(name, age, date, time, nameOfAssistant, comment) => {
+const addNewVisitor = async(name, nameOfAssistant, age, date, time, comment) => {
 
   pool
   .query(
-    "INSERT INTO Visitors (visitor_name, visitors_age, date_of_visit, time_of_visit, assistant, comments) values ($1, $2, $3, $4, $5, $6)", 
+    "INSERT INTO Visitors (visitor_name, assistant, visitors_age, date_of_visit, time_of_visit, comments) values ($1, $2, $3, $4, $5, $6)", 
     [name, nameOfAssistant, age, date, time, comment])
   .then(data => (data.rows))
   .catch(err => console.error("nope", err.stack))
@@ -48,12 +55,18 @@ app.post("/done", (req, res) => {
   if(!req.body) throw new Error('body cannot be empty')
 
   res.render('view', {
-    name : res.body.name
+    name : req.body.name,
+    assistant: req.body.assistant,
+    age: req.body.age,
+    date: req.body.date,
+    time: req.body.time,
+    comments: req.body.comment
   })
 });
 
-const visits = app.listen(3001, (req, res) => {
-  console.log("server running");
+// server
+const visits = app.listen(3000, (req, res) => {
+  console.log("server running on port 3000");
   return;
 });
 

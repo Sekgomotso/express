@@ -39,15 +39,21 @@ app.post('/new_visit', (req, res) => {
 res.sendFile(__dirname + '/form.html')
 });
 
-// save visitor into database
+// Save visitor into database
 const addNewVisitor = async(name, nameOfAssistant, age, date, time, comment) => {
 
-  pool
-  .query(
-    "INSERT INTO Visitors (visitor_name, assistant, visitors_age, date_of_visit, time_of_visit, comments) values ($1, $2, $3, $4, $5, $6)", 
-    [name, nameOfAssistant, age, date, time, comment])
-  .then(data => (data.rows))
-  .catch(err => console.error("nope", err.stack))
+  try{
+  
+    query = await pool.query(
+      "INSERT INTO Visitors (visitor_name, assistant, visitors_age, date_of_visit, time_of_visit, comments) values ($1, $2, $3, $4, $5, $6)", 
+      [name, nameOfAssistant, age, date, time, comment]);
+
+      return query.rows
+
+  } catch(err) {
+    console.log(err)
+
+  }
 };
 
 // pug message
@@ -62,12 +68,12 @@ app.post("/done", (req, res) => {
     time: req.body.time,
     comments: req.body.comment
   })
-  
+
 });
 
 // server
 const visits = app.listen(3000, (req, res) => {
-  console.log("server running on port 3000");
+  console.log("server listening on port 3000");
   return;
 });
 

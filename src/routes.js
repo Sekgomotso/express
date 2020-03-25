@@ -49,7 +49,7 @@ app.post('/new_visit', (req, res) => {
       date: req.body.date_of_visit,
       time: req.body.time_of_visit,
       comments: req.body.comments
-
+      
     })
 
 });

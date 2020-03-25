@@ -1,3 +1,5 @@
+"use strict"
+
 const express = require('express');
 
 const path = require('path');
@@ -43,7 +45,8 @@ app.post('/new_visit', (req, res) => {
     // pug message
     return res.render('view', {
 
-      name : req.body.visitor_name,
+      id: req.body.id,
+      name: req.body.visitor_name,
       assistant: req.body.assistant,
       age: req.body.visitors_age,
       date: req.body.date_of_visit,

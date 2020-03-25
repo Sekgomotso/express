@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -8,19 +7,21 @@ const bodyParser = require('body-parser');
 const Pool = require("pg").Pool;
 
 const pool = new Pool({
-  user: "user",
-  host: "localhost",
-  database: "prospective_umuzi_students",
-  password: "pass",
-  port: 5432
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.DATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PORT
 });
 
 // create app
+const app = express();
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // view engine
-app.set('./views', path.join(__dirname, './views'));
+app.set('/views', path.join(__dirname, '/views'));
 app.set('view engine', 'pug');
 
 // form route
@@ -30,6 +31,8 @@ app.get("/", (req, res) => {
 
 // submit button route
 app.post('/new_visit', (req, res) => {
+
+  // add new visitor
   addNewVisitor(req.body.visitor_name, 
     req.body.assistant, 
     req.body.visitors_age, 
@@ -37,7 +40,18 @@ app.post('/new_visit', (req, res) => {
     req.body.time_of_visit, 
     req.body.comments)
 
-res.sendFile(__dirname + '/form.html')
+    // pug message
+    return res.render('view', {
+
+      name : req.body.visitor_name,
+      assistant: req.body.assistant,
+      age: req.body.visitors_age,
+      date: req.body.date_of_visit,
+      time: req.body.time_of_visit,
+      comments: req.body.comments
+
+    })
+
 });
 
 // Save visitor into database
@@ -57,25 +71,10 @@ const addNewVisitor = async(name, nameOfAssistant, age, date, time, comments) =>
   }
 };
 
-// pug message
-app.post("/done", (req, res) => {
-  if(!req.body) throw new Error('body cannot be empty')
-
-  res.render('view', {
-    name : req.body.name,
-    assistant: req.body.assistant,
-    age: req.body.age,
-    date: req.body.date,
-    time: req.body.time,
-    comments: req.body.comment
-  })
-
-});
-
 // server
-const visits = app.listen(3000, (req, res) => {
+const server = app.listen(3000, (req, res) => {
   console.log("server listening on port 3000");
   return;
 });
 
-module.exports = visits;
+module.exports = server;
